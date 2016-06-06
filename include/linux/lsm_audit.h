@@ -41,9 +41,15 @@ struct lsm_network_audit {
 };
 
 struct lsm_ioctlop_audit {
+<<<<<<< HEAD
  	struct path path;
  	u16 cmd;
  };
+=======
+	struct path path;
+	u16 cmd;
+};
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 /* Auxiliary data to use in generating the audit record. */
 struct common_audit_data {

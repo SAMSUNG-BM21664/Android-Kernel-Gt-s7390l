@@ -283,7 +283,11 @@ enum rtattr_type_t {
 	RTA_MP_ALGO, /* no longer used */
 	RTA_TABLE,
 	RTA_MARK,
+<<<<<<< HEAD
         RTA_MFC_STATS, /* not used - backported from the future */
+=======
+	RTA_MFC_STATS, /* not used - backported from the future */
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 	RTA_UID,
 	__RTA_MAX
 };

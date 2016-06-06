@@ -619,6 +619,7 @@ int cond_write_list(struct policydb *p, struct cond_node *list, void *fp)
 	return 0;
 }
 
+<<<<<<< HEAD
  void cond_compute_xperms(struct avtab *ctab, struct avtab_key *key,
  		struct extended_perms_decision *xpermd)
  {
@@ -636,11 +637,33 @@ int cond_write_list(struct policydb *p, struct cond_node *list, void *fp)
  
  }
 
+=======
+void cond_compute_xperms(struct avtab *ctab, struct avtab_key *key,
+		struct extended_perms_decision *xpermd)
+{
+	struct avtab_node *node;
+
+	if (!ctab || !key || !xpermd)
+		return;
+
+	for (node = avtab_search_node(ctab, key); node;
+			node = avtab_search_node_next(node, key->specified)) {
+		if (node->key.specified & AVTAB_ENABLED)
+			services_compute_xperms_decision(xpermd, node);
+	}
+	return;
+
+}
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 /* Determine whether additional permissions are granted by the conditional
  * av table, and if so, add them to the result
  */
 void cond_compute_av(struct avtab *ctab, struct avtab_key *key,
+<<<<<<< HEAD
  		struct av_decision *avd, struct extended_perms *xperms)
+=======
+		struct av_decision *avd, struct extended_perms *xperms)
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 {
 	struct avtab_node *node;
 
@@ -663,9 +686,15 @@ void cond_compute_av(struct avtab *ctab, struct avtab_key *key,
 		if ((u16)(AVTAB_AUDITALLOW|AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_AUDITALLOW|AVTAB_ENABLED)))
 			avd->auditallow |= node->datum.u.data;
+<<<<<<< HEAD
  		if ((node->key.specified & AVTAB_ENABLED) &&
  				(node->key.specified & AVTAB_XPERMS))
  			services_compute_xperms_drivers(xperms, node);
+=======
+		if (xperms && (node->key.specified & AVTAB_ENABLED) &&
+				(node->key.specified & AVTAB_XPERMS))
+			services_compute_xperms_drivers(xperms, node);
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 	}
 	return;
 }

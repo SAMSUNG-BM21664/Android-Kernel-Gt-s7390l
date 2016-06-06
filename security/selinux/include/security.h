@@ -133,11 +133,19 @@ struct extended_perms {
 
 void security_compute_av(u32 ssid, u32 tsid,
 			 u16 tclass, struct av_decision *avd,
+<<<<<<< HEAD
  			 struct extended_perms *xperms);
  
  void security_compute_xperms_decision(u32 ssid, u32 tsid, u16 tclass,
  			 u8 driver, struct extended_perms_decision *xpermd);
  
+=======
+			 struct extended_perms *xperms);
+
+void security_compute_xperms_decision(u32 ssid, u32 tsid, u16 tclass,
+			 u8 driver, struct extended_perms_decision *xpermd);
+
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 void security_compute_av_user(u32 ssid, u32 tsid,
 			     u16 tclass, struct av_decision *avd);
 

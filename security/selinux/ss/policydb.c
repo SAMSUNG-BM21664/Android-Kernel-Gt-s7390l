@@ -134,6 +134,7 @@ static struct policydb_compat_info policydb_compat[] = {
 		.ocon_num	= OCON_NUM,
 	},
 	{
+<<<<<<< HEAD
  		.version	= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS,
  		.sym_num	= SYM_NUM,
  		.ocon_num	= OCON_NUM,
@@ -153,6 +154,27 @@ static struct policydb_compat_info policydb_compat[] = {
  		.sym_num	= SYM_NUM,
  		.ocon_num	= OCON_NUM,
  	},
+=======
+		.version	= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS,
+		.sym_num	= SYM_NUM,
+		.ocon_num	= OCON_NUM,
+	},
+	{
+		.version	= POLICYDB_VERSION_DEFAULT_TYPE,
+		.sym_num	= SYM_NUM,
+		.ocon_num	= OCON_NUM,
+	},
+	{
+		.version	= POLICYDB_VERSION_CONSTRAINT_NAMES,
+		.sym_num	= SYM_NUM,
+		.ocon_num	= OCON_NUM,
+	},
+	{
+		.version	= POLICYDB_VERSION_XPERMS_IOCTL,
+		.sym_num	= SYM_NUM,
+		.ocon_num	= OCON_NUM,
+	},
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 };
 
 static struct policydb_compat_info *policydb_lookup_compat(int version)
@@ -624,6 +646,7 @@ static int common_destroy(void *key, void *datum, void *p)
 }
 
 static void constraint_expr_destroy(struct constraint_expr *expr)
+<<<<<<< HEAD
  {
  	if (expr) {
  		ebitmap_destroy(&expr->names);
@@ -635,6 +658,19 @@ static void constraint_expr_destroy(struct constraint_expr *expr)
  		kfree(expr);
  	}
  }
+=======
+{
+	if (expr) {
+		ebitmap_destroy(&expr->names);
+		if (expr->type_names) {
+			ebitmap_destroy(&expr->type_names->types);
+			ebitmap_destroy(&expr->type_names->negset);
+			kfree(expr->type_names);
+		}
+		kfree(expr);
+	}
+}
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 static int cls_destroy(void *key, void *datum, void *p)
 {
@@ -1177,6 +1213,7 @@ bad:
 }
 
 static void type_set_init(struct type_set *t)
+<<<<<<< HEAD
  {
  	ebitmap_init(&t->types);
  	ebitmap_init(&t->negset);
@@ -1204,6 +1241,35 @@ static void type_set_init(struct type_set *t)
  static int read_cons_helper(struct policydb *p,
  				struct constraint_node **nodep,
  				int ncons, int allowxtarget, void *fp)
+=======
+{
+	ebitmap_init(&t->types);
+	ebitmap_init(&t->negset);
+}
+
+static int type_set_read(struct type_set *t, void *fp)
+{
+	__le32 buf[1];
+	int rc;
+
+	if (ebitmap_read(&t->types, fp))
+		return -EINVAL;
+	if (ebitmap_read(&t->negset, fp))
+		return -EINVAL;
+
+	rc = next_entry(buf, fp, sizeof(u32));
+	if (rc < 0)
+		return -EINVAL;
+	t->flags = le32_to_cpu(buf[0]);
+
+	return 0;
+}
+
+
+static int read_cons_helper(struct policydb *p,
+				struct constraint_node **nodep,
+				int ncons, int allowxtarget, void *fp)
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 {
 	struct constraint_node *c, *lc;
 	struct constraint_expr *e, *le;
@@ -1272,6 +1338,7 @@ static void type_set_init(struct type_set *t)
 				if (rc)
 					return rc;
 				if (p->policyvers >=
+<<<<<<< HEAD
  					POLICYDB_VERSION_CONSTRAINT_NAMES) {
  						e->type_names = kzalloc(sizeof
  						(*e->type_names),
@@ -1283,6 +1350,19 @@ static void type_set_init(struct type_set *t)
  					if (rc)
  						return rc;
  				}
+=======
+					POLICYDB_VERSION_CONSTRAINT_NAMES) {
+						e->type_names = kzalloc(sizeof
+						(*e->type_names),
+						GFP_KERNEL);
+					if (!e->type_names)
+						return -ENOMEM;
+					type_set_init(e->type_names);
+					rc = type_set_read(e->type_names, fp);
+					if (rc)
+						return rc;
+				}
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 				break;
 			default:
 				return -EINVAL;
@@ -1370,9 +1450,30 @@ static int class_read(struct policydb *p, struct hashtab *h, void *fp)
 			goto bad;
 		ncons = le32_to_cpu(buf[0]);
 		rc = read_cons_helper(p, &cladatum->validatetrans,
+<<<<<<< HEAD
  				ncons, 1, fp);
+=======
+				ncons, 1, fp);
 		if (rc)
 			goto bad;
+	}
+
+	if (p->policyvers >= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS) {
+		rc = next_entry(buf, fp, sizeof(u32) * 3);
+		if (rc)
+			goto bad;
+
+		cladatum->default_user = le32_to_cpu(buf[0]);
+		cladatum->default_role = le32_to_cpu(buf[1]);
+		cladatum->default_range = le32_to_cpu(buf[2]);
+	}
+
+	if (p->policyvers >= POLICYDB_VERSION_DEFAULT_TYPE) {
+		rc = next_entry(buf, fp, sizeof(u32) * 1);
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
+		if (rc)
+			goto bad;
+		cladatum->default_type = le32_to_cpu(buf[0]);
 	}
 	
 	if (p->policyvers >= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS) {
@@ -2810,6 +2911,7 @@ static int common_write(void *vkey, void *datum, void *ptr)
 }
 
 static int type_set_write(struct type_set *t, void *fp)
+<<<<<<< HEAD
  {
  	int rc;
  	__le32 buf[1];
@@ -2826,6 +2928,24 @@ static int type_set_write(struct type_set *t, void *fp)
  
  	return 0;
  }
+=======
+{
+	int rc;
+	__le32 buf[1];
+
+	if (ebitmap_write(&t->types, fp))
+		return -EINVAL;
+	if (ebitmap_write(&t->negset, fp))
+		return -EINVAL;
+
+	buf[0] = cpu_to_le32(t->flags);
+	rc = put_entry(buf, sizeof(u32), 1, fp);
+	if (rc)
+		return -EINVAL;
+
+	return 0;
+}
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 static int write_cons_helper(struct policydb *p, struct constraint_node *node,
 			     void *fp)
@@ -2859,11 +2979,19 @@ static int write_cons_helper(struct policydb *p, struct constraint_node *node,
 				if (rc)
 					return rc;
 				if (p->policyvers >=
+<<<<<<< HEAD
  					POLICYDB_VERSION_CONSTRAINT_NAMES) {
  					rc = type_set_write(e->type_names, fp);
  					if (rc)
  						return rc;
  				}
+=======
+					POLICYDB_VERSION_CONSTRAINT_NAMES) {
+					rc = type_set_write(e->type_names, fp);
+					if (rc)
+						return rc;
+				}
+>>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 				break;
 			default:
 				break;
@@ -2958,6 +3086,23 @@ static int class_write(void *vkey, void *datum, void *ptr)
  		if (rc)
  			return rc;
  	}
+
+	if (p->policyvers >= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS) {
+		buf[0] = cpu_to_le32(cladatum->default_user);
+		buf[1] = cpu_to_le32(cladatum->default_role);
+		buf[2] = cpu_to_le32(cladatum->default_range);
+
+		rc = put_entry(buf, sizeof(uint32_t), 3, fp);
+		if (rc)
+			return rc;
+	}
+
+	if (p->policyvers >= POLICYDB_VERSION_DEFAULT_TYPE) {
+		buf[0] = cpu_to_le32(cladatum->default_type);
+		rc = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (rc)
+			return rc;
+	}
 
 	return 0;
 }
