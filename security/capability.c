@@ -95,7 +95,11 @@ static int cap_sb_statfs(struct dentry *dentry)
 }
 
 static int cap_sb_mount(const char *dev_name, struct path *path,
+<<<<<<< HEAD
  			const char *type, unsigned long flags, void *data)
+=======
+			const char *type, unsigned long flags, void *data)
+>>>>>>> 597b77e... update security/
 {
 	return 0;
 }

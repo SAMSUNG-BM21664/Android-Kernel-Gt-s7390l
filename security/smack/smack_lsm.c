@@ -407,7 +407,11 @@ static int smack_sb_statfs(struct dentry *dentry)
  * being mounted on, an error code otherwise.
  */
 static int smack_sb_mount(const char *dev_name, struct path *path,
+<<<<<<< HEAD
  			  const char *type, unsigned long flags, void *data)
+=======
+			  const char *type, unsigned long flags, void *data)
+>>>>>>> 597b77e... update security/
 {
 	struct superblock_smack *sbp = path->dentry->d_sb->s_security;
 	struct smk_audit_info ad;

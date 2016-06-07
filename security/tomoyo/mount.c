@@ -72,7 +72,11 @@ static bool tomoyo_check_mount_acl(struct tomoyo_request_info *r,
  * Caller holds tomoyo_read_lock().
  */
 static int tomoyo_mount_acl(struct tomoyo_request_info *r,
+<<<<<<< HEAD
  			    const char *dev_name,
+=======
+			    const char *dev_name,
+>>>>>>> 597b77e... update security/
 			    struct path *dir, const char *type,
 			    unsigned long flags)
 {

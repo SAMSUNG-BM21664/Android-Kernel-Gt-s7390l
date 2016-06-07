@@ -407,7 +407,11 @@ static int tomoyo_path_chroot(struct path *path)
  * Returns 0 on success, negative value otherwise.
  */
 static int tomoyo_sb_mount(const char *dev_name, struct path *path,
+<<<<<<< HEAD
  			   const char *type, unsigned long flags, void *data)
+=======
+			   const char *type, unsigned long flags, void *data)
+>>>>>>> 597b77e... update security/
 {
 	return tomoyo_mount_permission(dev_name, path, type, flags, data);
 }
