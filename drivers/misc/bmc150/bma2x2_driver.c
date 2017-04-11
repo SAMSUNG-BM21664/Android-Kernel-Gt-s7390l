@@ -1,19 +1,16 @@
-/*  Date: 2013/06/17 22:13:00
- *  Revision: 1.7.2
- */
-
-/*
- * This software program is licensed subject to the GNU General Public License
- * (GPL).Version 2,June 1991, available at http://www.fsf.org/copyleft/gpl.html
-
- * (C) Copyright 2011 Bosch Sensortec GmbH
- * All Rights Reserved
- */
-
-
-/* file BMA2X2.c
-   brief This file contains all function implementations for the BMA2X2 in linux
-
+/*!
+ * @section LICENSE
+ * (C) Copyright 2013 Bosch Sensortec GmbH All Rights Reserved
+ *
+ * This software program is licensed subject to the GNU General
+ * Public License (GPL).Version 2,June 1991,
+ * available at http://www.fsf.org/copyleft/gpl.html
+ *
+ * @filename bma2x2.c
+ * @date     2013/10/25
+ * @id       "a2bd407"
+ * @version  v1.7.3
+ * @brief    brief This file contains all function implementations for the BMA2X2 in linux
 */
 
 #include <linux/module.h>
@@ -3414,7 +3411,6 @@ static void bma2x2_set_motion_interrupt(struct i2c_client *client, bool enable, 
 	int comres = 0;
 	unsigned char data;
 	if (enable) {
-<<<<<<< HEAD
 		bma2x2_soft_reset(bma2x2->bma2x2_client);
 		mdelay(20);
 		bma2x2_set_mode(bma2x2->bma2x2_client, BMA2X2_MODE_LOWPOWER1);
@@ -3428,57 +3424,20 @@ static void bma2x2_set_motion_interrupt(struct i2c_client *client, bool enable, 
 		data = 0x02;
 		comres = bma2x2_smbus_write_byte(client, BMA2X2_SLOPE_DUR__REG,
 							&data);
-=======
-		comres = bma2x2_soft_reset(bma2x2->bma2x2_client);
-		comres = bma2x2_set_mode(bma2x2->bma2x2_client, BMA2X2_MODE_LOWPOWER1);
-        	comres = bma2x2_set_bandwidth(client, BMA2X2_BW_SET);
-		comres = bma2x2_set_range(client, BMA2X2_RANGE_SET);
-		mdelay(1);
-		data = 0x04;
-		comres = bma2x2_smbus_write_byte(client, BMA2X2_EN_INT1_PAD_SLOPE__REG,
-							&data);
-#if defined(CONFIG_MACH_JAVA_SS_BAFFINLITE)
-		data = 0x03;
-#else
-		data = 0x02;  // slope interrupt triggers if [slope_dur<1:0>+1] consecutive slope data points
-#endif
-		comres = bma2x2_smbus_write_byte(client, BMA2X2_SLOPE_DUR__REG,
-							&data);
-
-            	comres = bma2x2_smbus_read_byte(client,  BMA2X2_SLOPE_DUR__REG, 
-							&data);                
-                printk(KERN_INFO "[BMC150] bma2x2_set_motion_interrupt : duration=%d\n", data);
-                
->>>>>>> a7d3305... driver: update bmc050 driver
 		if (factorytest){
 			data = 0x00;
 			comres = bma2x2_smbus_write_byte(client, BMA2X2_SLOPE_THRES__REG,
 								&data);
 		}
 		else{
-<<<<<<< HEAD
 			data = 0x0A;
 			comres = bma2x2_smbus_write_byte(client, BMA2X2_SLOPE_THRES__REG,
 								&data);
 		}
-=======
-#if defined(CONFIG_MACH_JAVA_SS_BAFFINLITE)
-			data = 0x0A;    // 3.91mg ~ 998mg (2g-range) 0x0A*3.91=39.10mg
-#else
-			data = 0x0A;    // 3.91mg ~ 998mg (2g-range) 0x0A*3.91=39.10mg
-#endif
-			comres = bma2x2_smbus_write_byte(client, BMA2X2_SLOPE_THRES__REG,
-								&data);
-		}
-        
-            	comres = bma2x2_smbus_read_byte(client,  BMA2X2_SLOPE_THRES__REG, 
-							&data);
-                printk(KERN_INFO "[BMC150] bma2x2_set_motion_interrupt : threshold=%d\n", data);
-        
->>>>>>> a7d3305... driver: update bmc050 driver
 		data = 0x07;
 		comres = bma2x2_smbus_write_byte(client, BMA2X2_INT_ENABLE1_REG,
 							&data);
+		mdelay(1);
 	} 
 	else {
 		data = 0x00;
@@ -4170,19 +4129,12 @@ static ssize_t bma2x2_flat_hold_time_show(struct device *dev,
 static ssize_t bma2x2_selftest_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
-	int result;
+
 
 	struct i2c_client *client = to_i2c_client(dev);
 	struct bma2x2_data *bma2x2 = i2c_get_clientdata(client);
 
-	result = atomic_read(&bma2x2->selftest_result);
-
-	if (result == 0)
-		result = 1;
-	else
-		result = 0;
-
-	return sprintf(buf, "%d, %d, %d, %d\n", result, 0, 0, 0);
+	return sprintf(buf, "%d\n", atomic_read(&bma2x2->selftest_result));
 
 }
 
@@ -5907,7 +5859,6 @@ static struct device_attribute *accelerometer_attrs[] = {
 	&dev_attr_raw_data,
 	&dev_attr_calibration,
 	&dev_attr_accel_cal_open,	
-	&dev_attr_selftest,	
 #ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
 	&dev_attr_reactive_alert,
 #endif
@@ -5934,7 +5885,7 @@ static void bma2x2_work_func_alert(struct work_struct *work)
 		pr_info("[BMA2XX] %s: motion interrupt happened\n",
 			__func__);
 		wake_lock_timeout(&bma2x2->reactive_wake_lock,
-			msecs_to_jiffies(3000));
+			msecs_to_jiffies(2000));
 	}
 }
 
@@ -6204,88 +6155,6 @@ done:
 }
 #endif
 
-
-#if defined(CONFIG_SENSORS_HSCDTD006A) || defined(CONFIG_SENSORS_HSCDTD008A)
-static struct bma2x2_data *g_bma2x2 = NULL;
-static atomic_t flgEna;
-static atomic_t delay;
-int accsns_get_acceleration_data(int *xyz)
-{
-	struct bma2x2acc acc_value;        
-
-        if(g_bma2x2 == NULL) return 1;
-
-	bma2x2_read_accel_xyz(g_bma2x2->bma2x2_client, g_bma2x2->sensor_type, &acc_value);
-
-	mutex_lock(&g_bma2x2->value_mutex);
-	g_bma2x2->value.x = acc_value.x;
-	g_bma2x2->value.y = acc_value.y;
-	g_bma2x2->value.z = acc_value.z;
-	mutex_unlock(&g_bma2x2->value_mutex);
-
-	acc_value.x = acc_value.x >>4;
-	acc_value.y = acc_value.y >>4;
-	acc_value.z = acc_value.z >>4;
-    
-        xyz[0] = (int)(acc_value.x);
-        xyz[1] = (int)(acc_value.y);
-        xyz[2] = (int)(acc_value.z);
-
-	//printk(KERN_INFO "[BMC150] Acc_I2C, x:%d, y:%d, z:%d\n", xyz[0], xyz[1], xyz[2]);
-	return 0;
-}
-
-void accsns_activate(int flgatm, int flg, int dtime)
-{
-    int pre_enable;
-
-    if(g_bma2x2 == NULL) return;
-        
-    pre_enable= atomic_read(&g_bma2x2->enable);
-    
-    printk(KERN_INFO "[BMC150] accsns_activate : flgatm=%d, flg=%d, dtime=%d\n", flgatm, flg, dtime);
-
-    if (flg != 0) flg = 1;
-
-#ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
-	mutex_lock(&g_bma2x2->data_mutex);
-#endif
-	mutex_lock(&g_bma2x2->enable_mutex);
-    //Power modes
-    if (flg == 0) //sleep
-    {
-        if (pre_enable == 1) {
-            bma2x2_set_mode(g_bma2x2->bma2x2_client, BMA2X2_MODE_SUSPEND);
-            atomic_set(&g_bma2x2->enable, 0);
-#ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
-            atomic_set(&g_bma2x2->set_mode, (unsigned int)BMA2X2_MODE_SUSPEND);
-#endif            
-        }
-    }
-    else
-    {
-        if (pre_enable == 0) {
-            bma2x2_set_mode(g_bma2x2->bma2x2_client, BMA2X2_MODE_NORMAL);
-            atomic_set(&g_bma2x2->enable, 1);
-#ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
-            atomic_set(&g_bma2x2->set_mode, (unsigned int)BMA2X2_MODE_NORMAL);
-#endif            
-        }
-    }
-    	mutex_unlock(&g_bma2x2->enable_mutex);
-#ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
-	mutex_unlock(&g_bma2x2->data_mutex);
-#endif    
-
-    if (flgatm) {
-        atomic_set(&flgEna, flg);
-        atomic_set(&delay, dtime);
-    }
-}
-EXPORT_SYMBOL(accsns_get_acceleration_data);
-EXPORT_SYMBOL(accsns_activate);
-#endif
-
 static int bma2x2_probe(struct i2c_client *client,
 		const struct i2c_device_id *id)
 {
@@ -6304,20 +6173,14 @@ static int bma2x2_probe(struct i2c_client *client,
 		err = -ENOMEM;
 		goto exit;
 	}
-<<<<<<< HEAD
     
-        mdelay(10); //for preventing i2c fail of reading chip id
-        
-=======
-
 	/* do soft reset */
 	if (bma2x2_soft_reset(client) < 0) {
 		err = -EINVAL;
 		goto kfree_exit;
 	}
 	mdelay(5);
-
->>>>>>> a7d3305... driver: update bmc050 driver
+        
 	/* read chip id */
 	tempvalue = i2c_smbus_read_word_data(client, BMA2X2_CHIP_ID_REG);
 	tmp_chip_id = tempvalue&0x00ff;
@@ -6373,6 +6236,12 @@ static int bma2x2_probe(struct i2c_client *client,
 #if defined(BMA2X2_ENABLE_INT1) || defined(BMA2X2_ENABLE_INT2)
 	bma2x2_set_Int_Mode(client, 1);/*latch interrupt 250ms*/
 #endif
+	/*8,single tap
+	  10,orient
+	  11,flat*/
+	//bma2x2_set_Int_Enable(client, 8, 1);
+	//bma2x2_set_Int_Enable(client, 10, 1);
+	//bma2x2_set_Int_Enable(client, 11, 1);
 
 #ifdef BMA2X2_ENABLE_INT1
 	/* maps interrupt to INT1 pin */
@@ -6494,9 +6363,6 @@ static int bma2x2_probe(struct i2c_client *client,
 	register_early_suspend(&data->early_suspend);
 #endif
 
-#if defined(CONFIG_SENSORS_HSCDTD006A) || defined(CONFIG_SENSORS_HSCDTD008A)
-        g_bma2x2 = data;
-#endif
 
 	return 0;
 
@@ -6524,9 +6390,6 @@ error_input_allocate_device_bma2x2:
 #endif
 kfree_exit:
 	kfree(data);
-#if defined(CONFIG_SENSORS_HSCDTD006A) || defined(CONFIG_SENSORS_HSCDTD008A)
-        g_bma2x2 = NULL;
-#endif
 exit:
 	return err;
 }
@@ -6537,7 +6400,6 @@ static void bma2x2_early_suspend(struct early_suspend *h)
 #if 0    
 	struct bma2x2_data *data =
 		container_of(h, struct bma2x2_data, early_suspend);
-
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 #ifdef CONFIG_INPUT_BMA2x2_ACC_ALERT_INT
@@ -6560,7 +6422,6 @@ static void bma2x2_late_resume(struct early_suspend *h)
 #if 0    
 	struct bma2x2_data *data =
 		container_of(h, struct bma2x2_data, early_suspend);
-
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 0) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_NORMAL);
@@ -6615,7 +6476,6 @@ static int bma2x2_suspend(struct i2c_client *client, pm_message_t mesg)
 {
 #if 0    
 	struct bma2x2_data *data = i2c_get_clientdata(client);
-
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_SUSPEND);
@@ -6630,7 +6490,6 @@ static int bma2x2_resume(struct i2c_client *client)
 {
 #if 0    
 	struct bma2x2_data *data = i2c_get_clientdata(client);
-
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_NORMAL);
@@ -6661,9 +6520,9 @@ static struct i2c_driver bma2x2_driver = {
 		.owner	= THIS_MODULE,
 		.name	= SENSOR_NAME,
 	},
-	.shutdown	= bma2x2_shutdown,
 //	.suspend	= bma2x2_suspend,
 //	.resume		= bma2x2_resume,
+	.shutdown	= bma2x2_shutdown,
 	.id_table	= bma2x2_id,
 	.probe		= bma2x2_probe,
 	.remove		= __devexit_p(bma2x2_remove),
@@ -6672,7 +6531,6 @@ static struct i2c_driver bma2x2_driver = {
 
 static int __init BMA2X2_init(void)
 {   
-<<<<<<< HEAD
 #if defined (CONFIG_MACH_HAWAII_SS_KYLEVE) || defined (CONFIG_MACH_HAWAII_SS_KYLEVESS)
         int ret=0;
         struct regulator *power_regulator = NULL;
@@ -6691,9 +6549,6 @@ static int __init BMA2X2_init(void)
 #endif
 
         printk(KERN_INFO "[BMA2XX] %s\n",__FUNCTION__);
-=======
-        printk(KERN_INFO "[BMC150] %s\n",__FUNCTION__);
->>>>>>> a7d3305... driver: update bmc050 driver
 
 	return i2c_add_driver(&bma2x2_driver);
 }
@@ -6703,7 +6558,7 @@ static void __exit BMA2X2_exit(void)
 	i2c_del_driver(&bma2x2_driver);
 }
 
-MODULE_AUTHOR("Bosch Sensortec <contact@bosch-sensortec.com>");
+MODULE_AUTHOR("Albert Zhang <xu.zhang@bosch-sensortec.com>");
 MODULE_DESCRIPTION("BMA2X2 accelerometer sensor driver");
 MODULE_LICENSE("GPL");
 
