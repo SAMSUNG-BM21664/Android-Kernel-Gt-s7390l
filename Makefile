@@ -3,7 +3,7 @@ PATCHLEVEL = 4
 SUBLEVEL = 5
 EXTRAVERSION =
 NAME = Saber-toothed Squirrel
-CROSS_COMPILE=/home/malcolmx/android/toolchain/arm-eabi-4.7/bin/arm-eabi-
+CROSS_COMPILE=/home/malcolmx/Android/toolchain/arm-eabi-4.7/bin/arm-eabi-
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
