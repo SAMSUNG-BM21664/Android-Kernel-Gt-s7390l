@@ -1,3 +1,4 @@
+
 #define COMMON_FILE_SOCK_PERMS "ioctl", "read", "write", "create", \
     "getattr", "setattr", "lock", "relabelfrom", "relabelto", "append"
 
@@ -146,20 +147,11 @@ struct security_class_mapping secclass_map[] = {
 	{ "memprotect", { "mmap_zero", NULL } },
 	{ "peer", { "recv", NULL } },
 	{ "capability2",
-<<<<<<< HEAD
- 	  { "mac_override", "mac_admin", "syslog", "wake_alarm", "block_suspend",
- 	    NULL } },
-	{ "kernel_service", { "use_as_override", "create_files_as", NULL } },
-	{ "tun_socket",
-	  { COMMON_SOCK_PERMS, NULL } },
-	{ "binder", { "impersonate", "call", "set_context_mgr", "transfer", NULL } },  
-=======
 	  { "mac_override", "mac_admin", "syslog", "wake_alarm", "block_suspend",
 	    NULL } },
 	{ "kernel_service", { "use_as_override", "create_files_as", NULL } },
 	{ "tun_socket",
 	  { COMMON_SOCK_PERMS, NULL } },
 	{ "binder", { "impersonate", "call", "set_context_mgr", "transfer", NULL } },
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 	{ NULL }
   };

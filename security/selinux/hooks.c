@@ -418,19 +418,11 @@ static int sb_finish_set_opts(struct super_block *sb)
 		sbsec->flags &= ~SE_SBLABELSUPP;
 
 	/* Special handling. Is genfs but also has in-core setxattr handler*/
-<<<<<<< HEAD
- 	if (!strcmp(sb->s_type->name, "sysfs") ||
- 	    !strcmp(sb->s_type->name, "pstore") ||
- 	    !strcmp(sb->s_type->name, "debugfs") ||
- 	    !strcmp(sb->s_type->name, "rootfs"))
- 		sbsec->flags |= SE_SBLABELSUPP;
-=======
 	if (!strcmp(sb->s_type->name, "sysfs") ||
 	    !strcmp(sb->s_type->name, "pstore") ||
 	    !strcmp(sb->s_type->name, "debugfs") ||
 	    !strcmp(sb->s_type->name, "rootfs"))
 		sbsec->flags |= SE_SBLABELSUPP;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 	/* Initialize the root inode. */
 	rc = inode_doinit_with_dentry(root_inode, root);
@@ -695,19 +687,11 @@ static int selinux_set_mnt_opts(struct super_block *sb,
 
 	if (strcmp(sb->s_type->name, "proc") == 0)
 		sbsec->flags |= SE_SBPROC | SE_SBGENFS;
-<<<<<<< HEAD
- 
- 	if (!strcmp(sb->s_type->name, "debugfs") ||
- 	    !strcmp(sb->s_type->name, "sysfs") ||
- 	    !strcmp(sb->s_type->name, "pstore"))
- 		sbsec->flags |= SE_SBGENFS;
-=======
 
 	if (!strcmp(sb->s_type->name, "debugfs") ||
 	    !strcmp(sb->s_type->name, "sysfs") ||
 	    !strcmp(sb->s_type->name, "pstore"))
 		sbsec->flags |= SE_SBGENFS;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 	/* Determine the labeling behavior to use for this filesystem type. */
 	rc = security_fs_use((sbsec->flags & SE_SBPROC) ? "proc" : sb->s_type->name, &sbsec->behavior, &sbsec->sid);
@@ -1162,15 +1146,9 @@ static inline u16 socket_type_to_security_class(int family, int type, int protoc
 }
 
 static int selinux_genfs_get_sid(struct dentry *dentry,
-<<<<<<< HEAD
- 				 u16 tclass,
- 				 u16 flags,
- 				 u32 *sid)
-=======
 				 u16 tclass,
 				 u16 flags,
 				 u32 *sid)
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 {
 	int rc;
 	struct super_block *sb = dentry->d_inode->i_sb;
@@ -1185,15 +1163,6 @@ static int selinux_genfs_get_sid(struct dentry *dentry,
 		rc = PTR_ERR(path);
 	else {
 		if (flags & SE_SBPROC) {
-<<<<<<< HEAD
- 			/* each process gets a /proc/PID/ entry. Strip off the
- 			 * PID part to get a valid selinux labeling.
- 			 * e.g. /proc/1/net/rpc/nfs -> /net/rpc/nfs */
- 			while (path[1] >= '0' && path[1] <= '9') {
- 				path[1] = '/';
- 				path++;
- 			}
-=======
 			/* each process gets a /proc/PID/ entry. Strip off the
 			 * PID part to get a valid selinux labeling.
 			 * e.g. /proc/1/net/rpc/nfs -> /net/rpc/nfs */
@@ -1201,7 +1170,6 @@ static int selinux_genfs_get_sid(struct dentry *dentry,
 				path[1] = '/';
 				path++;
 			}
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 		}
 		rc = security_genfs_sid(sb->s_type->name, path, tclass, sid);
 	}
@@ -1364,35 +1332,6 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
 
 		if ((sbsec->flags & SE_SBGENFS) && !S_ISLNK(inode->i_mode)) {
 			/* We must have a dentry to determine the label on
-<<<<<<< HEAD
- 			 * procfs inodes */
- 			if (opt_dentry)
- 				/* Called from d_instantiate or
- 				 * d_splice_alias. */
- 				dentry = dget(opt_dentry);
- 			else
- 				/* Called from selinux_complete_init, try to
- 				 * find a dentry. */
- 				dentry = d_find_alias(inode);
- 			/*
- 			 * This can be hit on boot when a file is accessed
- 			 * before the policy is loaded.  When we load policy we
- 			 * may find inodes that have no dentry on the
- 			 * sbsec->isec_head list.  No reason to complain as
- 			 * these will get fixed up the next time we go through
- 			 * inode_doinit() with a dentry, before these inodes
- 			 * could be used again by userspace.
- 			 */
- 			if (!dentry)
- 				goto out_unlock;
- 			isec->sclass = inode_mode_to_security_class(inode->i_mode);
- 			rc = selinux_genfs_get_sid(dentry, isec->sclass,
- 						   sbsec->flags, &sid);
- 			dput(dentry);
- 			if (rc)
- 				goto out_unlock;
- 			isec->sid = sid;
-=======
 			 * procfs inodes */
 			if (opt_dentry)
 				/* Called from d_instantiate or
@@ -1420,7 +1359,6 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
 			if (rc)
 				goto out_unlock;
 			isec->sid = sid;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 		}
 		break;
 	}
@@ -2177,15 +2115,6 @@ static int selinux_bprm_set_creds(struct linux_binprm *bprm)
 		new_tsec->sid = old_tsec->exec_sid;
 		/* Reset exec SID on execve. */
 		new_tsec->exec_sid = 0;
-<<<<<<< HEAD
-		
- 	/*
- 	* Minimize confusion: if no_new_privs and a transition is
- 	* explicitly requested, then fail the exec.
- 	*/
- 	if (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)
- 		return -EPERM;
-=======
 
 		/*
 		 * Minimize confusion: if no_new_privs and a transition is
@@ -2193,7 +2122,6 @@ static int selinux_bprm_set_creds(struct linux_binprm *bprm)
 		 */
 		if (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)
 			return -EPERM;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 	} else {
 		/* Check for a default transition on this program. */
 		rc = security_transition_sid(old_tsec->sid, isec->sid,
@@ -2208,11 +2136,7 @@ static int selinux_bprm_set_creds(struct linux_binprm *bprm)
 	ad.u.path = bprm->file->f_path;
 
 	if ((bprm->file->f_path.mnt->mnt_flags & MNT_NOSUID) ||
-<<<<<<< HEAD
- 	    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))
-=======
 	    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 		new_tsec->sid = old_tsec->sid;
 
 	if (new_tsec->sid == old_tsec->sid) {
@@ -3168,49 +3092,6 @@ static void selinux_file_free_security(struct file *file)
 	file_free_security(file);
 }
 
-<<<<<<< HEAD
- /*
-  * Check whether a task has the ioctl permission and cmd
-  * operation to an inode.
-  */
- int ioctl_has_perm(const struct cred *cred, struct file *file,
- 		u32 requested, u16 cmd)
- {
- 	struct common_audit_data ad;
- 	struct file_security_struct *fsec = file->f_security;
- 	struct inode *inode = file->f_path.dentry->d_inode;
- 	struct inode_security_struct *isec = inode->i_security;
- 	struct lsm_ioctlop_audit ioctl;
- 	u32 ssid = cred_sid(cred);
- 	struct selinux_audit_data sad = {0,};
- 	int rc;
- 	u8 driver = cmd >> 8;
- 	u8 xperm = cmd & 0xff;
- 
- 	COMMON_AUDIT_DATA_INIT(&ad, IOCTL_OP);
- 	ad.u.op = &ioctl;
- 	ad.u.op->cmd = cmd;
- 	ad.selinux_audit_data = &sad;
- 	ad.u.op->path = file->f_path;
- 
- 	if (ssid != fsec->sid) {
- 		rc = avc_has_perm(ssid, fsec->sid,
- 				SECCLASS_FD,
- 				FD__USE,
- 				&ad);
- 		if (rc)
- 			goto out;
- 	}
- 
- 	if (unlikely(IS_PRIVATE(inode)))
- 		return 0;
- 
- 	rc = avc_has_extended_perms(ssid, isec->sid, isec->sclass,
- 			requested, driver, xperm, &ad);
- out:
- 	return rc;
- }
-=======
 /*
  * Check whether a task has the ioctl permission and cmd
  * operation to an inode.
@@ -3252,7 +3133,6 @@ int ioctl_has_perm(const struct cred *cred, struct file *file,
 out:
 	return rc;
 }
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 static int selinux_file_ioctl(struct file *file, unsigned int cmd,
 			      unsigned long arg)
@@ -5791,11 +5671,6 @@ static int selinux_key_getsecurity(struct key *key, char **_buffer)
 
 static struct security_operations selinux_ops = {
 	.name =				"selinux",
-	
-	.binder_set_context_mgr =	selinux_binder_set_context_mgr,
-	.binder_transaction =		selinux_binder_transaction,
-	.binder_transfer_binder =	selinux_binder_transfer_binder,
-	.binder_transfer_file =		selinux_binder_transfer_file,
 
 	.binder_set_context_mgr =	selinux_binder_set_context_mgr,
 	.binder_transaction =		selinux_binder_transaction,

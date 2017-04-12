@@ -518,11 +518,7 @@ int mls_compute_sid(struct context *scontext,
 	struct range_trans rtr;
 	struct mls_range *r;
 	struct class_datum *cladatum;
-<<<<<<< HEAD
  	int default_range = 0;
-=======
-	int default_range = 0;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 	if (!policydb.mls_enabled)
 		return 0;
@@ -536,7 +532,6 @@ int mls_compute_sid(struct context *scontext,
 		r = hashtab_search(policydb.range_tr, &rtr);
 		if (r)
 			return mls_range_set(newcontext, r);
-<<<<<<< HEAD
 		
 		if (tclass && tclass <= policydb.p_classes.nprim) {
  			cladatum = policydb.class_val_to_struct[tclass - 1];
@@ -559,7 +554,6 @@ int mls_compute_sid(struct context *scontext,
  			return mls_context_cpy(newcontext, tcontext);
  		}
 		
-=======
 
 		if (tclass && tclass <= policydb.p_classes.nprim) {
 			cladatum = policydb.class_val_to_struct[tclass - 1];
@@ -582,7 +576,6 @@ int mls_compute_sid(struct context *scontext,
 			return mls_context_cpy(newcontext, tcontext);
 		}
 
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 		/* Fallthrough */
 	case AVTAB_CHANGE:
 		if ((tclass == policydb.process_class) || (sock == true))

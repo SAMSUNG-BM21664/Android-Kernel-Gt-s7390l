@@ -224,12 +224,10 @@ enum {
 #define RTPROT_DHCP	16      /* DHCP client */
 
 /* rtm_scope
-
    Really it is not scope, but sort of distance to the destination.
    NOWHERE are reserved for not existing destinations, HOST is our
    local addresses, LINK are destinations, located on directly attached
    link and UNIVERSE is everywhere in the Universe.
-
    Intermediate values are also possible f.e. interior routes
    could be assigned a value between UNIVERSE and LINK.
 */
@@ -283,11 +281,7 @@ enum rtattr_type_t {
 	RTA_MP_ALGO, /* no longer used */
 	RTA_TABLE,
 	RTA_MARK,
-<<<<<<< HEAD
-        RTA_MFC_STATS, /* not used - backported from the future */
-=======
 	RTA_MFC_STATS, /* not used - backported from the future */
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 	RTA_UID,
 	__RTA_MAX
 };

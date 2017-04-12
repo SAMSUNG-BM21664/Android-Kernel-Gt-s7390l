@@ -1,3 +1,4 @@
+
 /*
  * A security context is a set of security attributes
  * associated with each subject and object controlled
@@ -77,24 +78,6 @@ out:
 /*
  * Sets both levels in the MLS range of 'dst' to the high level of 'src'.
  */
-<<<<<<< HEAD
- static inline int mls_context_cpy_high(struct context *dst, struct context *src)
- {
- 	int rc;
- 
- 	dst->range.level[0].sens = src->range.level[1].sens;
- 	rc = ebitmap_cpy(&dst->range.level[0].cat, &src->range.level[1].cat);
- 	if (rc)
- 		goto out;
- 
- 	dst->range.level[1].sens = src->range.level[1].sens;
- 	rc = ebitmap_cpy(&dst->range.level[1].cat, &src->range.level[1].cat);
- 	if (rc)
- 		ebitmap_destroy(&dst->range.level[0].cat);
- out:
- 	return rc;
- }
-=======
 static inline int mls_context_cpy_high(struct context *dst, struct context *src)
 {
 	int rc;
@@ -111,7 +94,6 @@ static inline int mls_context_cpy_high(struct context *dst, struct context *src)
 out:
 	return rc;
 }
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 static inline int mls_context_cmp(struct context *c1, struct context *c2)
 {
@@ -179,4 +161,3 @@ static inline int context_cmp(struct context *c1, struct context *c2)
 }
 
 #endif	/* _SS_CONTEXT_H_ */
-

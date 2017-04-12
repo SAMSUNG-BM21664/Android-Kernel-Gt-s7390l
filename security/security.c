@@ -281,11 +281,7 @@ int security_sb_statfs(struct dentry *dentry)
 }
 
 int security_sb_mount(const char *dev_name, struct path *path,
-<<<<<<< HEAD
-                        const char *type, unsigned long flags, void *data)
-=======
                        const char *type, unsigned long flags, void *data)
->>>>>>> 02ef68d... build: Security and net: fix compilation error
 {
 	return security_ops->sb_mount(dev_name, path, type, flags, data);
 }

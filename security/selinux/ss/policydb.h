@@ -61,7 +61,6 @@ struct class_datum {
 	struct constraint_node *constraints;	/* constraints on class permissions */
 	struct constraint_node *validatetrans;	/* special transition rules */
 /* Options how a new object user, role, and type should be decided */
-<<<<<<< HEAD
  #define DEFAULT_SOURCE         1
  #define DEFAULT_TARGET         2
  	char default_user;
@@ -75,21 +74,6 @@ struct class_datum {
  #define DEFAULT_TARGET_HIGH    5
  #define DEFAULT_TARGET_LOW_HIGH        6
  	char default_range;	
-=======
-#define DEFAULT_SOURCE         1
-#define DEFAULT_TARGET         2
-	char default_user;
-	char default_role;
-	char default_type;
-/* Options how a new object range should be decided */
-#define DEFAULT_SOURCE_LOW     1
-#define DEFAULT_SOURCE_HIGH    2
-#define DEFAULT_SOURCE_LOW_HIGH        3
-#define DEFAULT_TARGET_LOW     4
-#define DEFAULT_TARGET_HIGH    5
-#define DEFAULT_TARGET_LOW_HIGH        6
-	char default_range;
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 };
 
 /* Role attributes */
@@ -174,21 +158,12 @@ struct cond_node;
  * policy source. This is not used by the kernel policy but allows
  * utilities such as audit2allow to determine constraint denials.
  */
-<<<<<<< HEAD
  struct type_set {
  	struct ebitmap types;
  	struct ebitmap negset;
  	u32 flags;
- };
- 
-=======
-struct type_set {
-	struct ebitmap types;
-	struct ebitmap negset;
-	u32 flags;
 };
 
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 /*
  * The configuration data includes security contexts for
  * initial SIDs, unlabeled file systems, TCP and UDP port numbers,

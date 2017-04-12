@@ -524,13 +524,8 @@ skip:
 
 	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
 	 * credentials unless they have the appropriate permit.
-<<<<<<< HEAD
- 	 *
- 	 * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
-=======
 	 *
 	 * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
->>>>>>> 597b77e... update security/
 	 */
 	if ((new->euid != old->uid ||
 	     new->egid != old->gid ||
@@ -538,11 +533,7 @@ skip:
 	    bprm->unsafe & ~LSM_UNSAFE_PTRACE_CAP) {
 		/* downgrade; they get no more than they had, and maybe less */
 		if (!capable(CAP_SETUID) ||
-<<<<<<< HEAD
- 		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
-=======
 		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
->>>>>>> 597b77e... update security/
 			new->euid = new->uid;
 			new->egid = new->gid;
 		}

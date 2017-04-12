@@ -103,11 +103,7 @@ static inline int avc_has_perm(u32 ssid, u32 tsid,
 }
 
 int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
-<<<<<<< HEAD
  		u8 driver, u8 perm, struct common_audit_data *ad);
-=======
-		u8 driver, u8 perm, struct common_audit_data *ad);
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
 
 u32 avc_policy_seqno(void);
 
@@ -139,4 +135,3 @@ DECLARE_PER_CPU(struct avc_cache_stats, avc_cache_stats);
 #endif
 
 #endif /* _SELINUX_AVC_H_ */
-

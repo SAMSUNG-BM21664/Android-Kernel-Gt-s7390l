@@ -175,12 +175,8 @@ static void sel_netnode_insert(struct sel_netnode *node)
 		struct sel_netnode *tail;
 		tail = list_entry(
 			rcu_dereference_protected(sel_netnode_hash[idx].list.prev,
-<<<<<<< HEAD
  						    lockdep_is_held(&sel_netnode_lock)),
-=======
-						  lockdep_is_held(&sel_netnode_lock)),
->>>>>>> 7bfb48d... Selinux: Update selinux for cm-13
-			struct sel_netnode, list);
+		struct sel_netnode, list);
 		list_del_rcu(&tail->list);
 		kfree_rcu(tail, rcu);
 	} else
